@@ -1,0 +1,25 @@
+# -*- coding: utf-8 -*-
+import scrapy
+import json
+
+class ProdmaSpider(scrapy.Spider):
+    name = "prodma"
+    allowed_domains = ["prodma.com"]
+    start_urls = (
+        'http://192.25.102.129:8080/prodma/product/productDataCheck/list/',
+    )
+
+    def parse(self, response):
+	d = json.loads(response.body)
+        l = d['data']
+	seccodes = []
+	for line in l:
+	    seccodes.append(line['seccode'])
+	seccodeStr = ','.join(seccodes)	
+	f = open('tempSeccodeList.txt','wb')
+	f.write(seccodeStr)
+	f.close()	
+	f1 = open('tempList.txt','wb')
+	f1.write(json.dumps(l))
+	f1.close()
+	#os.system('cd /home/vagrant/lixc/tutorial/tutorial && scrapy crawl eastmoney -a productId=%s' % seccodeStr)
