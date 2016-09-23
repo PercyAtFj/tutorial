@@ -6,4 +6,6 @@ class ProductItem(scrapy.Item):
     accumulatedUnitnv = scrapy.Field()
     manageFee = scrapy.Field()
     trustFee = scrapy.Field()
-    completed = scrapy.Field()
+    flag = scrapy.Field()
+    comeFrom = scrapy.Field()
+    updateDate = scrapy.Field() 

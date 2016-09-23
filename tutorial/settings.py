@@ -68,6 +68,8 @@ COOKIES_DEBUG = True
 ITEM_PIPELINES = {
     'tutorial.pipelines.TutorialPipeline': 300,
 }
+SQLITE_FILE = 'db.sqlite'
+SQLITE_TABLE = 'product'
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See http://doc.scrapy.org/en/latest/topics/autothrottle.html
@@ -89,3 +91,7 @@ ITEM_PIPELINES = {
 #HTTPCACHE_DIR = 'httpcache'
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
+PRODMA_USERNAME = 'admin'
+PRODMA_PASSWORD = '000000'
+PRODMA_DOMAIN = '192.25.102.129:8080'
+PRODMA_DATABASE = 'db.sqlite'

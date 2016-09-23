@@ -3,23 +3,19 @@ import scrapy
 import base64
 import re
 import sys
-import os
 import json
-import sqlite3
-import datetime
-sys.path.append(os.path.abspath(''))
+sys.path.append('/home/vagrant/lixc/tutorial/tutorial')
+
 import digestAuthentication
 import rsaUtil
 from scrapy.http import Request, FormRequest
-from scrapy.utils.project import get_project_settings
 
 
 class ProdmaSpider(scrapy.Spider):
     name = 'prodma'
-    settings = get_project_settings()
-    url = settings['PRODMA_DOMAIN']
+    url = '192.25.102.129:8080'
     start_urls = ['http://' + url + '/prodma/product/productDataCheck/list/']
-    db = settings['PRODMA_DATABASE']
+
     headers = {
         "Accept": "*/*",
         "Accept-Encoding": "gzip, deflate, br",
@@ -35,42 +31,19 @@ class ProdmaSpider(scrapy.Spider):
         "X-Requested-With": "XMLHttpRequest"
     }
 
-    def create_table(self, filename):
-        conn = sqlite3.connect(filename)
-        conn.execute("""create table if not exists product
-                     (seccode text not null,
-                      trustFee text,
-                      manageFee text,
-                      accumulatedUnitnv text,
-                      unitnv text,
-                      comeFrom int not null,
-                      updateDate text,
-                      primary key(seccode,comeFrom)
-                      )""")
-        conn.commit()
-        return conn
-
     def parse_item(self,response):
-	conn = self.create_table(self.db)
         d = json.loads(response.body)
         l = d['data']
-
-        for item in l:
-	    conn.execute('replace into product values(?,?,?,?,?,?,?)',
-                          (item.get("seccode"), item.get("trustFee"), item.get("manageFee"), item.get("accumulatedUnitnv"), item.get("unitnv"), "1", datetime.datetime.now().date()))
-	
-	seccodes = []
+        seccodes = []
         for line in l:
             seccodes.append(line['seccode'])
         seccodeStr = ','.join(seccodes)
         f = open('tempSeccodeList.txt','wb')
         f.write(seccodeStr)
         f.close()
-
-	if conn is not None:
-            conn.commit()
-            conn.close()
-
+        f1 = open('tempList.txt','wb')
+        f1.write(json.dumps(l))
+        f1.close()
         #os.system('cd /home/vagrant/lixc/tutorial/tutorial && scrapy crawl eastmoney -a productId=%s' % seccodeStr)
 
     def after_login(self, response) :
@@ -88,8 +61,8 @@ class ProdmaSpider(scrapy.Spider):
 	
     def post_login(self, response):
         print 'Preparing login'
-	username = self.settings["PRODMA_USERNAME"]
-	password = self.settings["PRODMA_PASSWORD"]
+	username = "admin"
+	password = "000000"
 	publicKeyPremeters = self.get_rsaPublicKey(response)			
 		
 	headers = response.headers['WWW-Authenticate']

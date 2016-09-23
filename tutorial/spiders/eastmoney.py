@@ -34,7 +34,12 @@ class EastmoneySpider(CrawlSpider):
 	item['seccode'] = m.group(1) 
 	item['manageFee'] = manageFee.group(1) 
 	item['trustFee'] = trustFee.group(1)
-#	self.item['completed'] = True
+        #1.来自prodma,2.来自天天基金网
+	item['comeFrom'] = '2' 
+	#1.单位净值，累计净值2.管理费率，托管费率
+	item['flag'] = '2'
+        item['unitnv'] = None
+        item['accumulatedUnitnv'] = None
 	return item
 
 
@@ -44,4 +49,10 @@ class EastmoneySpider(CrawlSpider):
 	item['seccode'] = m.group(1) 
         item['unitnv'] = response.xpath('//dl[@class="dataItem02"]/dd[1]/span[1]/text()').extract()[0]
         item['accumulatedUnitnv'] = response.xpath('//dl[@class="dataItem03"]/dd[1]/span[1]/text()').extract()[0]
+        #1.来自prodma,2.来自天天基金网
+	item['comeFrom'] = '2' 
+	#1.单位净值，累计净值2.管理费率，托管费率
+	item['flag'] = '1'
+	item['manageFee'] = None
+	item['trustFee'] = None
 	return item

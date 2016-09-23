@@ -17,7 +17,7 @@ else
 fi
 
 if [ $? -eq 0 ];then
- ./dataCheck.py > mylog.txt
+# ./dataCheck.py > mylog.txt
  echo 'Success!Congratulation' 
  exit 0
 else
